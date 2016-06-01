@@ -67,16 +67,7 @@ app.post('/listItems/:id', function (req, res) {
     });
 });
 
-app.put('/listItems/:id',function (req, res) {
 
-    var item = {
-        "id": req.params.id,
-        "barcode": "ITEM000005",
-        "name": "方便面",
-        "unit": "袋",
-        "price": 3.50
-    }
-})
 
 var server = app.listen(3000, function () {
 
