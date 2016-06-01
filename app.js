@@ -7,11 +7,13 @@ var getAllItems = require('./getAllItems');
 var getItem = require('./getItem');
 var addItem = require('./addItem');
 var putItem = require('./putItem');
+var deleteItem = require('./deleteItem');
 
 app.use('/',getAllItems);
 app.use('/',getItem);
 app.use('/',addItem);
 app.use('/',putItem);
+app.use('/',deleteItem);
 
 var server = app.listen(3000, function () {
 
