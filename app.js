@@ -4,9 +4,10 @@ var app = express();
 var fs = require("fs");
 
 var getAllItems = require('./getAllItems');
+var getItem = require('./getItem');
 
-//getAllItems;
 app.use('/',getAllItems);
+app.use('/',getItem);
 
 var server = app.listen(3000, function () {
 
