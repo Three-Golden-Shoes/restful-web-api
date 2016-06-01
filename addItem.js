@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express();
-
 var fs = require("fs");
+
+var fileName = 'items.json';
 
 router.post('/addItem/:id', function (req, res) {
     var item = {
