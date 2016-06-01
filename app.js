@@ -1,7 +1,21 @@
 var express = require('express');
 var app = express();
-
 var fs = require("fs");
+
+var fileName = 'items.json';
+
+fs.stat(fileName, function (err, stat) {
+    if ((stat && stat.isFile())) {
+
+    } else {
+        fs.open(fileName,"a",function (err, fd) {
+            if(err){
+                console.log('创建失败！');
+                return;
+            }
+        });
+    }
+});
 
 var getAllItems = require('./getAllItems');
 var getItem = require('./getItem');
@@ -9,11 +23,11 @@ var addItem = require('./addItem');
 var putItem = require('./putItem');
 var deleteItem = require('./deleteItem');
 
-app.use('/',getAllItems);
-app.use('/',getItem);
-app.use('/',addItem);
-app.use('/',putItem);
-app.use('/',deleteItem);
+app.use('/', getAllItems);
+app.use('/', getItem);
+app.use('/', addItem);
+app.use('/', putItem);
+app.use('/', deleteItem);
 
 var server = app.listen(3000, function () {
 
