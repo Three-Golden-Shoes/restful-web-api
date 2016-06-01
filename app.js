@@ -5,9 +5,11 @@ var fs = require("fs");
 
 var getAllItems = require('./getAllItems');
 var getItem = require('./getItem');
+var addItem = require('./addItem');
 
 app.use('/',getAllItems);
 app.use('/',getItem);
+app.use('/',addItem);
 
 var server = app.listen(3000, function () {
 
