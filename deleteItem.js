@@ -11,6 +11,11 @@ router.delete('/deleteItem/:id', function (req, res) {
 
             return;
         }
+        if(data === ''){
+            res.status(404).end(fileName + '文件中没有商品数据!');
+
+            return;
+        }
         data = JSON.parse(data);
         var item = data["item" + req.params.id];
         if (item === undefined) {

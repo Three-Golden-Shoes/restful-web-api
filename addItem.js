@@ -18,13 +18,19 @@ router.post('/addItem/:id', function (req, res) {
 
             return;
         }
-        data = JSON.parse(data);
-        var itemid = data['item' + req.params.id];
-        if (itemid != undefined) {
-            res.status(404).end("id为" + req.params.id + "的商品已存在！");
+        if(data != ''){
+            data = JSON.parse(data);
+            var itemid = data['item' + req.params.id];
+            if (itemid != undefined) {
+                res.status(404).end("id为" + req.params.id + "的商品已存在！");
 
-            return;
+                return;
+            }
         }
+
+        else 
+            data = {};
+
         data['item' + req.params.id] = item;
         fs.writeFile(fileName, JSON.stringify(data), function (err) {
             if (err) {
