@@ -4,14 +4,8 @@ var fs = require("fs");
 
 var fileName = 'items.json';
 
-router.post('/addItem/:id', function (req, res) {
-    var item = {
-        "id": req.params.id,
-        "barcode": "ITEM000005",
-        "name": "方便面",
-        "unit": "袋",
-        "price": 3.50
-    };
+router.post('/addItem', function (req, res) {
+
     fs.readFile(fileName, "utf8", function (err, data) {
         if (err) {
             req.status(404).end(fileName + '文件不存在!');
@@ -20,7 +14,7 @@ router.post('/addItem/:id', function (req, res) {
         }
         if(data != ''){
             data = JSON.parse(data);
-            var itemid = data['item' + req.params.id];
+            var itemid = data['item' + data['count']];
             if (itemid != undefined) {
                 res.status(404).end("id为" + req.params.id + "的商品已存在！");
 
@@ -28,10 +22,20 @@ router.post('/addItem/:id', function (req, res) {
             }
         }
 
-        else 
+        else {
             data = {};
+            data["count"] = 1;
+        }
+        var item = {
+            "id": data['count'],
+            "barcode": "ITEM000005",
+            "name": "方便面",
+            "unit": "袋",
+            "price": 3.50
+        };
 
-        data['item' + req.params.id] = item;
+        data['item' + data['count']] = item;
+        data['count'] ++;
         fs.writeFile(fileName, JSON.stringify(data), function (err) {
             if (err) {
                 res.status(404).end('未找到' + fileName + '文件!');
