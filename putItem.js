@@ -16,7 +16,7 @@ router.put('/putItem/:id', function (req, res) {
 
     fs.readFile(fileName, "utf8", function (err, data) {
         if (err) {
-            req.status(404).end(fileName + '文件不存在!');
+            res.status(404).end(fileName + '文件不存在!');
 
             return;
         }

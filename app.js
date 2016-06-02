@@ -6,10 +6,9 @@ var fileName = 'items.json';
 
 fs.stat(fileName, function (err, stat) {
     if ((stat && stat.isFile())) {
-
+        console.log();
     } else {
         fs.open(fileName,"a",function (err, fd) {
-            var data = {};
             if(err){
                 console.log('创建失败！');
                 return;

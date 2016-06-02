@@ -17,6 +17,7 @@ router.get('/listItems', function (req, res) {
             return;
         }
         data = JSON.parse(data);
+        delete data['count'];
         res.status(200).json(data);
     });
 });
