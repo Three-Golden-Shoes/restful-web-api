@@ -1,4 +1,5 @@
 var express = require('express');
+var bodyParser = require('body-parser');
 var app = express();
 var fs = require("fs");
 
@@ -8,14 +9,17 @@ fs.stat(fileName, function (err, stat) {
     if ((stat && stat.isFile())) {
         console.log();
     } else {
-        fs.open(fileName,"a",function (err, fd) {
-            if(err){
+        fs.open(fileName, "a", function (err, fd) {
+            if (err) {
                 console.log('创建失败！');
                 return;
             }
         });
     }
 });
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
 
 var getAllItems = require('./getAllItems');
 var getItem = require('./getItem');

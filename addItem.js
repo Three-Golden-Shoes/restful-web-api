@@ -4,46 +4,38 @@ var fs = require("fs");
 
 var fileName = 'items.json';
 
-router.post('/addItem', function (req, res) {
+router.post('/Item', function (req, res) {
 
+    if (req.body.barcode === undefined || req.body.name === undefined || req.body.unit === undefined || req.body.price === undefined
+        || typeof (req.body.barcode) != 'string' || typeof (req.body.name) != 'string' || typeof (req.body.unit) != 'string' || typeof (req.body.price) != 'number') {
+        res.status(401).json();
+        return;
+    }
     fs.readFile(fileName, "utf8", function (err, data) {
-        if (err) {
-            req.status(404).end(fileName + '文件不存在!');
+        if (data === '' || data === []) {
+            data = [{"count": 1}];
 
-            return;
         }
-        if(data != ''){
+
+        else if(data != [{"count":1}]){
             data = JSON.parse(data);
-            var itemid = data['item' + data['count']];
-            if (itemid != undefined) {
-                res.status(404).end("id为" + req.params.id + "的商品已存在！");
-
-                return;
-            }
         }
 
-        else {
-            data = {};
-            data["count"] = 1;
-        }
         var item = {
-            "id": data['count'],
-            "barcode": "ITEM000005",
-            "name": "方便面",
-            "unit": "袋",
-            "price": 3.50
+            "id": data[0].count,
+            "barcode": req.body.barcode,
+            "name": req.body.name,
+            "unit": req.body.unit,
+            "price": req.body.price
         };
 
-        data['item' + data['count']] = item;
-        data['count'] ++;
-        fs.writeFile(fileName, JSON.stringify(data), function (err) {
-            if (err) {
-                res.status(404).end('未找到' + fileName + '文件!');
+        data[data.length] = item;
 
-                return;
-            }
+        data[0].count++;
+
+        fs.writeFile(fileName, JSON.stringify(data), function (err) {
         });
-        res.status(200).json(item);
+        res.status(201).json(item);
     });
 });
 

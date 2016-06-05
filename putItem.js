@@ -4,43 +4,41 @@ var fs = require("fs");
 
 var fileName = 'items.json';
 
-router.put('/putItem/:id', function (req, res) {
-
-    var item = {
-        "id": req.params.id,
-        "barcode": "ITEM000005",
-        "name": "123",
-        "unit": "袋",
-        "price": 3.50
-    };
-
+router.put('/Item/:id', function (req, res) {
+    if (req.body.barcode === undefined || req.body.name === undefined || req.body.unit === undefined || req.body.price === undefined
+        || typeof (req.body.barcode) != 'string' || typeof (req.body.name) != 'string' || typeof (req.body.unit) != 'string' || typeof (req.body.price) != 'number') {
+        res.status(401).json();
+        return;
+    }
     fs.readFile(fileName, "utf8", function (err, data) {
-        if (err) {
-            res.status(404).end(fileName + '文件不存在!');
+        var item;
+        if (data === '' || data === [] || data === [{"count": 1}]) {
+            data = [{"count": 1}];
+            res.status(404).json();
 
             return;
         }
-        if(data === ''){
-            res.status(404).end(fileName + '文件中没有商品数据!');
 
-            return;
-        }
         data = JSON.parse(data);
-        var itemid = data['item' + req.params.id];
-        if (itemid === undefined) {
-            res.status(404).end("id为" + req.params.id + "的商品不存在！");
 
-            return;
-        }
-        data['item' + req.params.id] = item;
-        fs.writeFile(fileName, JSON.stringify(data), function (err) {
-            if (err) {
-                res.status(404).end('未找到' + fileName + '文件!');
-
-                return;
+        for (var i = 1; i < data.length; i++) {
+            if (data[i].id.toString() === req.params.id) {
+                item = {
+                    "id": req.params.id,
+                    "barcode": req.body.barcode,
+                    "name": req.body.name,
+                    "unit": req.body.unit,
+                    "price": req.body.price
+                };
+                data[i] = item;
             }
+        }
+        fs.writeFile(fileName, JSON.stringify(data), function (err) {
         });
-        res.status(200).json(item);
+        if (item != undefined)
+            res.status(201).json(item);
+        else
+            res.status(404).json();
     });
 });
 

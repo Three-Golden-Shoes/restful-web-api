@@ -4,35 +4,36 @@ var fs = require("fs");
 
 var fileName = 'items.json';
 
-router.delete('/deleteItem/:id', function (req, res) {
+router.delete('/Item/:id', function (req, res) {
     fs.readFile(fileName, "utf8", function (err, data) {
-        if (err) {
-            req.status(404).end(fileName + '文件不存在!');
+        var newData = [];
+        var flag = 0;
+        if (data === '' || data === [] || data === [{"count": 1}]) {
+            data === [{"count": 1}];
 
-            return;
-        }
-        if(data === ''){
-            res.status(404).end(fileName + '文件中没有商品数据!');
-
+            res.status(404).json();
             return;
         }
         data = JSON.parse(data);
-        var item = data["item" + req.params.id];
-        if (item === undefined) {
-            res.status(404).end("未找到该商品!");
+        var j = 0;
+        newData[j] = data[0];
+        for (var i = 1; i < data.length; i++) {
+            if (data[i].id.toString() != req.params.id) {
+                j++;
+                newData[j] = data[i];
+            }
+            else
+                flag = 1;
+        }
 
+        if (flag === 0) {
+            res.status(404).json();
             return;
         }
-        delete data["item" + req.params.id]
-        fs.writeFile(fileName, JSON.stringify(data), function (err) {
-            if (err) {
-                res.status(404).end('未找到' + fileName + '文件!');
-
-                return;
-            }
+        fs.writeFile(fileName, JSON.stringify(newData), function (err) {
         });
 
-        res.status(200).end("删除成功!");
+        res.status(204).json();
     });
 });
 

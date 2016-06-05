@@ -4,21 +4,22 @@ var fs = require("fs");
 
 var fileName = 'items.json';
 
-router.get('/listItems', function (req, res) {
+router.get('/Items', function (req, res) {
     fs.readFile(fileName, 'utf8', function (err, data) {
-        if (err) {
-            req.status(404).end(fileName + '文件不存在!');
+        var j = 0, newData = [];
 
-            return;
-        }
-        if(data === ''){
-            res.status(404).end(fileName + '文件中没有商品数据!');
+        if (data === '' || data === []) {
+            data = [{"count": 1}];
 
-            return;
         }
-        data = JSON.parse(data);
-        delete data['count'];
-        res.status(200).json(data);
+        else
+            data = JSON.parse(data);
+
+        for (var i = 1; i < data.length; i++) {
+            newData[j] = data[i];
+            j++;
+        }
+        res.status(200).json(newData);
     });
 });
 
