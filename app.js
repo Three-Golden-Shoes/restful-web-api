@@ -3,41 +3,25 @@ var bodyParser = require('body-parser');
 var app = express();
 var fs = require("fs");
 
-var fileName = 'items.json';
+var getFileName = require('./file-name');
 
-fs.stat(fileName, function (err, stat) {
+fs.stat(getFileName(), function (err, stat) {
     if ((stat && stat.isFile())) {
-        console.log();
     } else {
-        fs.open(fileName, "a", function (err, fd) {
+        fs.open(getFileName, "a", function (err, fd) {
             if (err) {
                 console.log('创建失败！');
-                return;
             }
         });
     }
 });
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
 
-var getAllItems = require('./getAllItems');
-var getItem = require('./getItem');
-var addItem = require('./addItem');
-var putItem = require('./putItem');
-var deleteItem = require('./deleteItem');
+app.use('/', require('./get-all-items'));
+app.use('/', require('./get-item'));
+app.use('/', require('./add-item'));
+app.use('/', require('./put-item'));
+app.use('/', require('./delete-item'));
 
-app.use('/', getAllItems);
-app.use('/', getItem);
-app.use('/', addItem);
-app.use('/', putItem);
-app.use('/', deleteItem);
-
-var server = app.listen(3000, function () {
-
-    var host = server.address().address
-    var port = server.address().port
-
-    console.log("应用实例，访问地址为 http://%s:%s", host, port)
-
-});
+var server = app.listen(3000);
