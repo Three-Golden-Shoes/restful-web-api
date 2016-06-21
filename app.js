@@ -8,7 +8,7 @@ var getFileName = require('./file-name');
 fs.stat(getFileName(), function (err, stat) {
     if ((stat && stat.isFile())) {
     } else {
-        fs.open(getFileName, "a", function (err, fd) {
+        fs.open(getFileName(), "a", function (err, fd) {
             if (err) {
                 console.log('创建失败！');
             }
@@ -24,4 +24,4 @@ app.use('/', require('./add-item'));
 app.use('/', require('./put-item'));
 app.use('/', require('./delete-item'));
 
-var server = app.listen(3000);
+app.listen(3000);

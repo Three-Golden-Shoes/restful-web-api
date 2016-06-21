@@ -5,18 +5,17 @@ var getFileName = require('./file-name');
 
 router.delete('/products/:id', function (req, res) {
     fs.readFile(getFileName(), "utf8", function (err, data) {
-        var flag = 0;
         if (data === '' || data === {}) {
-            res.status(404).json();
-            
+            res.sendStatus(404);
+
             return;
         }
         else {
-            data = JSON.parse(data);
+            var newData = JSON.parse(data);
             
-            for (var i = 0; i < data.items.length; i++) {
-                if (data.items[i].id.toString() === req.params.id) {
-                    data.items.splice(i, 1);
+            for (var i = 0; i < newData.items.length; i++) {
+                if (newData.items[i].id.toString() === req.params.id) {
+                    newData.items.splice(i, 1);
                     
                     fs.writeFile(getFileName(), JSON.stringify(data), function (err) {
                     });
@@ -27,7 +26,8 @@ router.delete('/products/:id', function (req, res) {
             }
         }
 
-        res.status(404).json();
+        res.sendStatus(404);
+
     });
 });
 

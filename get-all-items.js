@@ -12,9 +12,9 @@ router.get('/products', function (req, res) {
 
         }
         else {
-            data = JSON.parse(data);
+           var newData = JSON.parse(data);
 
-            res.status(200).json(data.items);
+            res.status(200).json(newData.items);
         }
     });
 });

@@ -6,8 +6,12 @@ var getFileName = require('./file-name');
 
 router.post('/products', function (req, res) {
 
-    if ( typeof (req.body.barcode) != 'string' || typeof (req.body.name) != 'string' || typeof (req.body.unit) != 'string' || typeof (req.body.price) != 'number') {
-        res.status(400).json();
+    if ( typeof (req.body.barcode) != 'string' || 
+         typeof (req.body.name) != 'string' ||
+         typeof (req.body.unit) != 'string' || 
+         typeof (req.body.price) != 'number') {
+        
+        res.sendStatus(400);
 
         return;
     }
@@ -16,22 +20,22 @@ router.post('/products', function (req, res) {
             data = {"indexNumber": 1, "items": []};
         }
         else {
-            data = JSON.parse(data);
+            var newData = JSON.parse(data);
         }
 
         var item = {
-            "id": data.indexNumber,
+            "id": newData.indexNumber,
             "barcode": req.body.barcode,
             "name": req.body.name,
             "unit": req.body.unit,
             "price": req.body.price
         };
 
-        data.items[data.items.length] = item;
+        newData.items.push(item);
 
-        data.indexNumber++;
+        newData.indexNumber++;
 
-        fs.writeFile(getFileName(), JSON.stringify(data), function (err) {
+        fs.writeFile(getFileName(), JSON.stringify(newData), function (err) {
         });
         res.status(201).json(item);
     });

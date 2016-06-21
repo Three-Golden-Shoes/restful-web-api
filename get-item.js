@@ -7,24 +7,23 @@ var getFileName = require('./file-name');
 router.get('/products/:id', function (req, res) {
     fs.readFile(getFileName(), "utf8", function (err, data) {
         if (data === '' || data === {}) {
-            res.status(404).json();
+            res.sendStatus(404);
         }
         else {
+            var newData = JSON.parse(data);
 
-            data = JSON.parse(data);
+            for (var i = 0; i < newData.items.length; i++) {
+                if (newData.items[i].id.toString() === req.params.id) {
+                    var item = newData.items[i];
 
-            for (var i = 0; i < data.items.length; i++) {
-                if (data.items[i].id.toString() === req.params.id) {
-                    var item = data.items[i];
-                    break;
+                    res.status(200).json(item);
+                    
+                    return;
                 }
             }
-            if (i === data.items.length) {
-                res.status(404).json();
-            }
-            res.status(200).json(item);
-
         }
+
+        res.sendStatus(404);
     });
 });
 
