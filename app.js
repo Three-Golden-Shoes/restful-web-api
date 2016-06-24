@@ -24,4 +24,11 @@ app.use('/', require('./add-item'));
 app.use('/', require('./put-item'));
 app.use('/', require('./delete-item'));
 
-app.listen(3000);
+app.use(function (err, req, res, next) {
+    console.error(err);
+    res.status(500).send('Some errors happened, please see the log on server');
+});
+
+var server = app.listen(3000,function () {
+    console.log('server listen:' + server.address().port);
+});

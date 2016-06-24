@@ -4,8 +4,12 @@ var fs = require("fs");
 
 var getFileNmae = require('./file-name');
 
-router.get('/products', function (req, res) {
+router.get('/products', function (req, res,next) {
     fs.readFile(getFileNmae(), 'utf8', function (err, data) {
+        if(err){
+            next(err);
+            return;
+        }
 
         if (data === '' || data === {}) {
             res.status(200).json([]);

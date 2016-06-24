@@ -4,8 +4,13 @@ var fs = require("fs");
 
 var getFileName = require('./file-name');
 
-router.get('/products/:id', function (req, res) {
+router.get('/products/:id', function (req, res,next) {
     fs.readFile(getFileName(), "utf8", function (err, data) {
+        if(err){
+            next(err);
+            
+            return;
+        }
         if (data === '' || data === {}) {
             res.sendStatus(404);
         }

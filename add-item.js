@@ -4,7 +4,7 @@ var fs = require("fs");
 
 var getFileName = require('./file-name');
 
-router.post('/products', function (req, res) {
+router.post('/products', function (req, res, next) {
 
     if ( typeof (req.body.barcode) != 'string' || 
          typeof (req.body.name) != 'string' ||
@@ -16,6 +16,12 @@ router.post('/products', function (req, res) {
         return;
     }
     fs.readFile(getFileName(), "utf8", function (err, data) {
+        if(err){
+            next(err);
+
+            return;
+        }
+
         if (data === '' || data === {}) {
             data = {"indexNumber": 1, "items": []};
         }
@@ -36,6 +42,9 @@ router.post('/products', function (req, res) {
         newData.indexNumber++;
 
         fs.writeFile(getFileName(), JSON.stringify(newData), function (err) {
+            next(err);
+
+            return;
         });
         res.status(201).json(item);
     });
